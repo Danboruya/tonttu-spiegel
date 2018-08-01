@@ -31,6 +31,7 @@ from google.assistant.library.device_helpers import register_device
 
 import argparse
 import subprocess
+import application
 
 
 try:
@@ -82,18 +83,19 @@ def custom_command(event, assistant):
         print()
         print("You sed: {}".format(cmd))
         print()
-        if 'are' in cmd and ('you' in cmd) and ('online' in cmd):
-            synthesize_text("Now I\'m online.", assistant)
+        if 'echo' in cmd and ('message' in cmd):
+            # synthesize_text("Now I\'m online.", assistant)
+            synthesize_text(application.print_command(cmd), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('who' in cmd and ('is' in cmd and 'in' in cmd and 'the' in cmd and ('lab' in cmd or 'Lab' in cmd))) or ('who' in cmd and ('is' in cmd and 'in' in cmd and ('lab' in cmd or 'Lab' in cmd))):
-            synthesize_text(get_room_members(), assistant)
+            # synthesize_text(get_room_members(), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif 'show' in cmd and (('me' in cmd) and ('the' in cmd) and ('member' in cmd) and ('status' in cmd)):
-            synthesize_text(get_all_member_status(), assistant)
+            # synthesize_text(get_all_member_status(), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
@@ -101,12 +103,12 @@ def custom_command(event, assistant):
                                ('do' in cmd and 'not' in cmd and 'disturb' in cmd) or
                                ('in' in cmd and 'University' in cmd) or
                                ('outside' in cmd and 'University' in cmd)):
-            synthesize_text(set_member_status(cmd), assistant)
+            # synthesize_text(set_member_status(cmd), assistant)
             cmd = ""
             assistant.stop_conversation()
             return 1
         elif 'application' in cmd and 'help' in cmd:
-            synthesize_text(bot_help(), assistant)
+            # synthesize_text(bot_help(), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
