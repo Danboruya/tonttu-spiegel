@@ -1,6 +1,9 @@
 # Ignore json file on utils directory
 utils/*.json
 
+# Ignore key file
+static/keys.py
+
 # Ignore pycache directory
 __pycache__/
 

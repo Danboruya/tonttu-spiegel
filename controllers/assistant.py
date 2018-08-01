@@ -84,8 +84,7 @@ def custom_command(event, assistant):
         print("You sed: {}".format(cmd))
         print()
         if 'echo' in cmd and ('message' in cmd):
-            # synthesize_text("Now I\'m online.", assistant)
-            synthesize_text(application.print_command(cmd), assistant)
+            synthesize_text(application.print_command(cmd, "echo message"), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
