@@ -1,0 +1,8 @@
+# Ignore json file on utils directory
+utils/*.json
+
+# Ignore pycache directory
+__pycache__/
+
+# Ignore PyCharm directory
+.idea
