@@ -68,46 +68,52 @@ def synthesize_text(cmd, assistant):
     response = client.synthesize_speech(input_text, voice, audio_config)
 
     # The response's audio_content is binary.
-    with open('voice/response.mp3', 'wb') as out:
+    with open('response.mp3', 'wb') as out:
         out.write(response.audio_content)
         # print('Audio content written to file "output.mp3"')
-    print(cmd)
+    # print(cmd)
     print()
-    # assistant.stop_conversation()
-    subprocess.call("mpg321 ./voice/response.mp3", shell=True)
+    assistant.stop_conversation()
+    subprocess.call("mpg321 response.mp3", shell=True)
 
 
-def custom_command(event, assistant):
+def custom_command(event, assistant, app):
     if event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
         cmd = event.args["text"]
         print()
         print("You sed: {}".format(cmd))
         print()
-        if 'echo' in cmd and ('message' in cmd):
-            synthesize_text(application.print_command(cmd, "echo message"), assistant)
+        assistant.stop_conversation()
+        if ('echo' in cmd or 'Echo' in cmd) and ('message' in cmd):
+            if 'echo' in cmd:
+                synthesize_text(application.print_command(cmd, "echo message", app), assistant)
+            else:
+                synthesize_text(application.print_command(cmd, "Echo message", app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif ('who' in cmd and ('is' in cmd and 'in' in cmd and 'the' in cmd and ('lab' in cmd or 'Lab' in cmd))) or ('who' in cmd and ('is' in cmd and 'in' in cmd and ('lab' in cmd or 'Lab' in cmd))):
-            # synthesize_text(get_room_members(), assistant)
+        elif ('play' in cmd or 'Play' in cmd) and ('some' in cmd and ('videos' in cmd or 'movies' in cmd or 'movie' in cmd)):
+            # synthesize_text(application.play_some_videos(app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif 'show' in cmd and (('me' in cmd) and ('the' in cmd) and ('member' in cmd) and ('status' in cmd)):
-            # synthesize_text(get_all_member_status(), assistant)
+        elif ('play' in cmd or 'Play' in cmd) and ('videos' in cmd or 'movies' in cmd or 'movie' in cmd):
+            # synthesize_text(application.play_videos(app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif 'set' in cmd and (('in' in cmd and ('lab' in cmd or 'Lab' in cmd)) or
-                               ('do' in cmd and 'not' in cmd and 'disturb' in cmd) or
-                               ('in' in cmd and 'University' in cmd) or
-                               ('outside' in cmd and 'University' in cmd)):
-            # synthesize_text(set_member_status(cmd), assistant)
-            cmd = ""
+        elif ('stop' in cmd or 'Stop' in cmd) and ('videos' in cmd or 'movies' in cmd or 'movie' in cmd):
+            # synthesize_text(application.stop_videos(app), assistant)
             assistant.stop_conversation()
+            cmd = ""
             return 1
-        elif 'application' in cmd and 'help' in cmd:
-            # synthesize_text(bot_help(), assistant)
+        elif ('turn' in cmd or 'Turn' in cmd) and ('on' in cmd and ('display' in cmd)):
+            # synthesize_text(application.turn_on_screen(app), assistant)
+            assistant.stop_conversation()
+            cmd = ""
+            return 1
+        elif ('turn' in cmd or 'Turn' in cmd) and ('off' in cmd and ('display' in cmd)):
+            # synthesize_text(application.turn_off_screen(app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
@@ -116,7 +122,7 @@ def custom_command(event, assistant):
     return 0
 
 
-def process_event(event, assistant):
+def process_event(event, assistant, app):
     """Pretty prints events.
 
     Prints all events that occur with two spaces between each new
@@ -125,21 +131,24 @@ def process_event(event, assistant):
     Args:
         event(event.Event): The current event to process.
         assistant: Assistant object.
+        app: Application object
     """
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
         print()
     print(event)
-    flag = custom_command(event, assistant)
+    flag = custom_command(event, assistant, app)
     print()
-    # if flag == 1:
-    if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and
-            event.args and not event.args['with_follow_on_turn']):
-            print()
-    if event.type == EventType.ON_DEVICE_ACTION:
-        for command, params in event.actions:
-            print('Do command', command, 'with params', str(params))
-    # else:
-    #     pass
+    if flag == 1:
+        if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and
+                event.args and not event.args['with_follow_on_turn']):
+                print()
+                print(2)
+        if event.type == EventType.ON_DEVICE_ACTION:
+            for command, params in event.actions:
+                print('Do command', command, 'with params', str(params))
+                print(3)
+    else:
+        pass
 
 
 def main():
@@ -196,6 +205,7 @@ def main():
     device_model_id = args.device_model_id or device_model_id
 
     with Assistant(credentials, device_model_id) as assistant:
+        app = application.ApplicationStatus()
         events = assistant.start()
 
         device_id = assistant.device_id
@@ -218,7 +228,7 @@ def main():
                 print(WARNING_NOT_REGISTERED)
 
         for event in events:
-            process_event(event, assistant)
+            process_event(event, assistant, app)
 
 
 if __name__ == '__main__':
