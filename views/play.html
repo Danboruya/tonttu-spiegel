@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--<html lang="en">
 <head>
     <meta charset="UTF-8">
 </head>
@@ -7,3 +7,103 @@
   <p>embedded video</p>
 </body>
 </html>
+-->
+<html>
+<head>
+<meta charset="UTF-8">
+<title>YouTube自動再生自動ループサンプル1</title>
+</head>
+<body>
+        {name}
+
+        <div id="player"></div>
+        <div id="player2"></div>
+        <div id="player3"></div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+<script >// YouTubeの埋め込み
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player(
+            'player', // 埋め込む場所の指定
+
+            {
+                videoId: '0HO2RVW0f_E', // YouTubeのID
+                    height: '190',
+                    width: '320',
+
+                playerVars: {
+                    loop: 1,//0:ループしない 1:ループする 1の場合playlist設定必須
+                    playlist: 'BtQyJtT1c7E,RiDdasVF1yY,7P6K8XGHz5Y,s5a9Omv7c-E,6C_CQIcu4Xc,gn1S4V-X2hs,HXK51KX66Fg,rV2sfIl77Xo,TuYIsT2oc1I,ZKyFmDwrGGo',//次に流すYoutubeのID
+                    controls: 1,//コントローラー有り
+                    autoplay: 1,//オートプレイ
+                    showinfo: 0//動画タイトルなど表示しない
+                },
+
+
+                events: {
+                    'onReady': onPlayerReady
+                }
+            }
+        );
+
+        ytPlayer = new YT.Player(
+            'player2', // 埋め込む場所の指定
+
+            {
+                videoId: '6Gr4DPtSMSs', // YouTubeのID
+                    height: '190',
+                    width: '320',
+
+                playerVars: {
+                    loop: 1,//0:ループしない 1:ループする 1の場合playlist設定必須
+                    playlist: '6Gr4DPtSMSs',//次に流すYoutubeのID
+                    controls: 1,//コントローラー有り
+                    autoplay: 1,//オートプレイ
+                    showinfo: 0//動画タイトルなど表示しない
+                },
+
+
+                events: {
+                    'onReady': onPlayerReady
+                }
+            }
+        );
+
+         ytPlayer = new YT.Player(
+            'player3', // 埋め込む場所の指定
+
+            {
+                videoId: 'N_tiOs7YVdg', // YouTubeのID
+                    height: '360',
+                    width: '640',
+
+                playerVars: {
+                    loop: 1,//0:ループしない 1:ループする 1の場合playlist設定必須
+                    playlist: 'N_tiOs7YVdg',//次に流すYoutubeのID
+                    controls: 1,//コントローラー有り
+                    autoplay: 1,//オートプレイ
+                    showinfo: 0//動画タイトルなど表示しない
+                },
+
+
+                events: {
+                    'onReady': onPlayerReady
+                }
+            }
+        );
+    }
+//プレイ準備完了後
+      function onPlayerReady(event) {
+        event.target.playVideo();
+        event.target.mute();
+      }
+      </script>
+
+
+
+            <script>
+    $('img').click(function(){
+        video = '<iframe src="'+ $(this).attr('data-video') +'" frameborder="0" width="240" height="135"></iframe>';
+    $(this).replaceWith(video);
+    });
+</script>

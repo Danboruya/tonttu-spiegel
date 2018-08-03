@@ -21,6 +21,7 @@ import json
 import os.path
 import os
 import pathlib2 as pathlib
+import datetime
 
 import google.oauth2.credentials
 
@@ -77,9 +78,11 @@ def synthesize_text(cmd, assistant):
     subprocess.call("mpg321 response.mp3", shell=True)
 
 
-def custom_command(event, assistant, app):
+def custom_command(event, assistant, app, ambient):
     if event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
         cmd = event.args["text"]
+        if app.get_status() != 0:
+            application.screen_on(app)
         print()
         print("You sed: {}".format(cmd))
         print()
@@ -92,28 +95,58 @@ def custom_command(event, assistant, app):
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif ('play' in cmd or 'Play' in cmd) and ('some' in cmd and ('videos' in cmd or 'movies' in cmd or 'movie' in cmd)):
+        elif ('play' in cmd or 'Play' in cmd) and ('some' in cmd and ('videos' in cmd or 'video' in cmd or
+                                                                      'movies' in cmd or 'movie' in cmd)):
             # synthesize_text(application.play_some_videos(app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif ('play' in cmd or 'Play' in cmd) and ('videos' in cmd or 'movies' in cmd or 'movie' in cmd):
-            # synthesize_text(application.play_videos(app), assistant)
+        elif ('play' in cmd or 'Play' in cmd) and ('videos' in cmd or 'video' in cmd or
+                                                   'movies' in cmd or 'movie' in cmd):
+            if 'video' in cmd:
+                r_ignore = 'video'
+            elif 'videos' in cmd:
+                r_ignore = 'videos'
+            elif 'movies' in cmd:
+                r_ignore = 'movies'
+            elif 'movie' in cmd:
+                r_ignore = 'movie'
+            else:
+                r_ignore = ''
+            synthesize_text(application.play_videos(cmd, r_ignore, app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif ('stop' in cmd or 'Stop' in cmd) and ('videos' in cmd or 'movies' in cmd or 'movie' in cmd):
-            # synthesize_text(application.stop_videos(app), assistant)
+        elif ('stop' in cmd or 'Stop' in cmd) and ('videos' in cmd or 'video' in cmd or
+                                                   'movies' in cmd or 'movie' in cmd):
+            synthesize_text(application.stop_videos(app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('turn' in cmd or 'Turn' in cmd) and ('on' in cmd and ('display' in cmd)):
-            # synthesize_text(application.turn_on_screen(app), assistant)
+            synthesize_text(application.screen_on(app), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('turn' in cmd or 'Turn' in cmd) and ('off' in cmd and ('display' in cmd)):
-            # synthesize_text(application.turn_off_screen(app), assistant)
+            synthesize_text(application.screen_off(app), assistant)
+            assistant.stop_conversation()
+            cmd = ""
+            return 1
+        elif ('actions' in cmd or 'Actions' in cmd or 'action' in cmd or 'Action' in cmd) and 'help' in cmd:
+            synthesize_text(application.actions_help(app), assistant)
+            assistant.stop_conversation()
+            cmd = ""
+            return 1
+        elif ('set' in cmd or 'Set' in cmd) and ('volume' in cmd or 'volumes' in cmd):
+            if 'Set' in cmd and 'volume' in cmd:
+                application.set_volume(cmd, "Set", "volume")
+            elif 'Set' in cmd and 'volumes' in cmd:
+                application.set_volume(cmd, "Set", "volumes")
+            elif 'set' in cmd and 'volume' in cmd:
+                application.set_volume(cmd, "set", "volume")
+            else:
+                application.set_volume(cmd, "set", "volumes")
             assistant.stop_conversation()
             cmd = ""
             return 1
@@ -122,7 +155,7 @@ def custom_command(event, assistant, app):
     return 0
 
 
-def process_event(event, assistant, app):
+def process_event(event, assistant, app, ambient):
     """Pretty prints events.
 
     Prints all events that occur with two spaces between each new
@@ -132,11 +165,12 @@ def process_event(event, assistant, app):
         event(event.Event): The current event to process.
         assistant: Assistant object.
         app: Application object
+        ambient: Ambient object
     """
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
         print()
     print(event)
-    flag = custom_command(event, assistant, app)
+    flag = custom_command(event, assistant, app, ambient)
     print()
     if flag == 1:
         if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and
@@ -206,6 +240,7 @@ def main():
 
     with Assistant(credentials, device_model_id) as assistant:
         app = application.ApplicationStatus()
+        ambient = application.Ambient()
         events = assistant.start()
 
         device_id = assistant.device_id
@@ -228,7 +263,7 @@ def main():
                 print(WARNING_NOT_REGISTERED)
 
         for event in events:
-            process_event(event, assistant, app)
+            process_event(event, assistant, app, ambient)
 
 
 if __name__ == '__main__':
