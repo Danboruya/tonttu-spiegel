@@ -78,11 +78,9 @@ def synthesize_text(cmd, assistant):
     subprocess.call("mpg321 response.mp3", shell=True)
 
 
-def custom_command(event, assistant, app, ambient):
+def custom_command(event, assistant):
     if event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
         cmd = event.args["text"]
-        if app.get_status() != 0:
-            application.screen_on(app)
         print()
         print("You sed: {}".format(cmd))
         print()
@@ -113,28 +111,28 @@ def custom_command(event, assistant, app, ambient):
                 r_ignore = 'movie'
             else:
                 r_ignore = ''
-            synthesize_text(application.play_videos(cmd, r_ignore, app), assistant)
+            synthesize_text(application.play_videos(cmd, r_ignore), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('stop' in cmd or 'Stop' in cmd) and ('videos' in cmd or 'video' in cmd or
                                                    'movies' in cmd or 'movie' in cmd):
-            synthesize_text(application.stop_videos(app), assistant)
+            application.stop_videos()
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('turn' in cmd or 'Turn' in cmd) and ('on' in cmd and ('display' in cmd)):
-            synthesize_text(application.screen_on(app), assistant)
+            synthesize_text(application.screen_on(), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('turn' in cmd or 'Turn' in cmd) and ('off' in cmd and ('display' in cmd)):
-            synthesize_text(application.screen_off(app), assistant)
+            synthesize_text(application.screen_off(), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
         elif ('actions' in cmd or 'Actions' in cmd or 'action' in cmd or 'Action' in cmd) and 'help' in cmd:
-            synthesize_text(application.actions_help(app), assistant)
+            synthesize_text(application.actions_help(), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
@@ -170,7 +168,7 @@ def process_event(event, assistant, app, ambient):
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
         print()
     print(event)
-    flag = custom_command(event, assistant, app, ambient)
+    flag = custom_command(event, assistant)
     print()
     if flag == 1:
         if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and

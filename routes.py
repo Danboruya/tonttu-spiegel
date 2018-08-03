@@ -1,4 +1,5 @@
 from bottle import jinja2_template as template, Bottle, redirect, static_file
+from controllers import application
 
 app = Bottle()
 
@@ -10,13 +11,10 @@ def static(file_path):
 
 @app.route('/')
 def root():
-    return template('ambient', title="ambient display")
-
-
-@app.route('/ambient')
-def ambient(day, time, weather_name, weather, temp, city_name):
-    return template('ambient', title="ambient display", day=day, time=time, weather= weather_name, weather_icon=weather,
-                    temp=temp, city=city_name)
+    [weather_id, weather_name, temp, city_name, weather_icon] = application.get_weather(application.DEFAULT_CITY_NAME)
+    container = {'icon': [weather_icon]}
+    return template('ambient', title="ambient display", weather=weather_name, temp=temp,
+                    city=city_name, container=container)
 
 
 @app.route('/play')
