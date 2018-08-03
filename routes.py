@@ -1,4 +1,5 @@
 from bottle import jinja2_template as template, Bottle, redirect, static_file
+from controllers import video
 from controllers import application
 
 app = Bottle()
@@ -19,7 +20,8 @@ def root():
 
 @app.route('/play')
 def play_video(video_name):
-    return template('play', title="play video", name=video_name)
+    url = video.get_url(video_name)
+    return template('play', title="play video", caught_url=url)
 
 
 @app.route('/nothing')
