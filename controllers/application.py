@@ -32,9 +32,8 @@ class Ambient:
         return self.time
 
 
-def print_command(cmd, ignore_word, app):
+def print_command(cmd, ignore_word):
     cmd = cmd.lstrip(ignore_word)
-    app.set_status(0)
     return cmd
 
 

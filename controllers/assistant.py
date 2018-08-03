@@ -33,6 +33,7 @@ from google.assistant.library.device_helpers import register_device
 import argparse
 import subprocess
 import application
+import routes
 
 
 try:
@@ -87,9 +88,9 @@ def custom_command(event, assistant):
         assistant.stop_conversation()
         if ('echo' in cmd or 'Echo' in cmd) and ('message' in cmd):
             if 'echo' in cmd:
-                synthesize_text(application.print_command(cmd, "echo message", app), assistant)
+                synthesize_text(application.print_command(cmd, "echo message"), assistant)
             else:
-                synthesize_text(application.print_command(cmd, "Echo message", app), assistant)
+                synthesize_text(application.print_command(cmd, "Echo message"), assistant)
             assistant.stop_conversation()
             cmd = ""
             return 1
@@ -111,7 +112,9 @@ def custom_command(event, assistant):
                 r_ignore = 'movie'
             else:
                 r_ignore = ''
+            cmd = cmd.lstrip("play").rstlip(r_ignore)
             synthesize_text(application.play_videos(cmd, r_ignore), assistant)
+            routes.play(cmd)
             assistant.stop_conversation()
             cmd = ""
             return 1
