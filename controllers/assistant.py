@@ -112,8 +112,14 @@ def custom_command(event, assistant):
                 r_ignore = 'movie'
             else:
                 r_ignore = ''
-            cmd = cmd.lstrip("play").rstlip(r_ignore)
-            synthesize_text(application.play_videos(cmd, r_ignore), assistant)
+            if 'play' in cmd:
+                l_ignore = 'play'
+            elif 'Play' in cmd:
+                l_ignore = 'Play'
+            else:
+                l_ignore = ''
+            synthesize_text(application.play_videos(cmd, l_ignore, r_ignore), assistant)
+            cmd = cmd.lstrip(l_ignore).rstlip(r_ignore)
             routes.play(cmd)
             assistant.stop_conversation()
             cmd = ""
