@@ -15,17 +15,31 @@ def static(file_path):
 
 
 @app.route('/')
-def root():
+def root(status, video_name):
+    if status == None:
+        status = 0
+    if status == 0:
+        path = "localhost:8080/"
+    elif status == 1:
+        path = "localhost:8080/play/{}".format(video_name)
     [weather_id, weather_name, temp, city_name, weather_icon] = application.get_weather(application.DEFAULT_CITY_NAME)
     container = {'icon': [weather_icon]}
+    page_info = {'path': [path], 'status': [status]}
     return template('ambient', title="ambient display", weather=weather_name, temp=temp,
-                    city=city_name, container=container, is_on_screen=True)
+                    city=city_name, container=container, is_on_screen=True, page_info=page_info)
 
 
-@app.route('/play')
-def play_video(video_name):
+@app.route('/play/<video_name>')
+def play_video(status, video_name):
+    if status == None:
+        status = 0
+    if status == 0:
+        path = "localhost:8080/"
+    elif status == 1:
+        path = "localhost:8080/play/{}".format(video_name)
     url = video.get_url(video_name)
-    return template('play', title="play video", caught_url=url)
+    page_info = {'path': [path], 'status': [status]}
+    return template('play', title="play video", caught_url=url, page_infor=page_info)
 
 
 @app.route('/nothing')
@@ -53,5 +67,5 @@ def off():
 
 @app.route('/nothing/control/on')
 def on():
-    root()
+    root(0, "")
     # return redirect('/')

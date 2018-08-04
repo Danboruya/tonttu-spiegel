@@ -95,14 +95,15 @@ def stop_videos():
 
 
 def screen_off():
-    requests.get("http://4e5dcd37.ap.ngrok.io/nothing")
-    routes.off()
+    # routes.off()
+    subprocess.Popen(["sudo bash -c ", "echo 1 > /sys/class/backlight/rpi_backlight/bl_power"], shell=True)
     msg = "OK. The information screen turn off"
     return msg
 
 
 def screen_on():
-    routes.on()
+    # routes.on()
+    subprocess.Popen(["sudo bash -c ", "echo 0 > /sys/class/backlight/rpi_backlight/bl_power"], shell=True)
     msg = "Sure. The information screens turn on."
     return msg
 
