@@ -1,4 +1,28 @@
-body,div,p {
-    color: #ffffff;
-    background-color: #000000;
+body {
+background-color: #000000;
+color: #ffffff;
+font-size: 40px;
+font-family: 'Roboto', sans-serif;
+
+}
+
+.box1{
+  float: left;
+  font-size: 50px;
+  width: 50%
+  }
+
+.box2{
+  float: right;
+  width: 20%;
+  }
+.box3{
+  float: left;
+  font-size: 20px;
+  }
+.box4{
+  float: right;
+  font-size: 20px;
+  height: 50%;
+  width: 30%;
 }
