@@ -15,13 +15,21 @@ def static(file_path):
 
 
 @app.route('/')
-def root(status, video_name):
+def root():
+    redirect('/0/none')
+
+
+@app.route('/<status>/<video_name>')
+def ambient(status, video_name):
     if status == None:
         status = 0
     if status == 0:
         path = "localhost:8080/"
     elif status == 1:
         path = "localhost:8080/play/{}".format(video_name)
+    else:
+        path = "localhost:8080/"
+
     [weather_id, weather_name, temp, city_name, weather_icon] = application.get_weather(application.DEFAULT_CITY_NAME)
     container = {'icon': [weather_icon]}
     page_info = {'path': [path], 'status': [status]}
@@ -55,7 +63,7 @@ def play(video_name):
 
 @app.route('/video/control/stop')
 def stop():
-    root()
+    ambient()
     # return redirect('/')
 
 

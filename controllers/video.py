@@ -1,6 +1,7 @@
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
+import argparse
 
 DEVELOPER_KEY = ""
 YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -9,6 +10,8 @@ YOUTUBE_API_VERSION = "v3"
 
 def get_url(cmd):
     search_word = cmd
+
+    argparser = argparse.ArgumentParser(conflict_handler='resolve')
     argparser.add_argument("--q", help="Search term", default=search_word)
     argparser.add_argument("--max-results", help="Max results", default=25)
     args = argparser.parse_args()
