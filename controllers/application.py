@@ -1,7 +1,8 @@
 import requests
 import json
+import sys
+sys.path.append('../')
 import routes
-import video
 import subprocess
 from datetime import datetime
 from static import keys
@@ -94,6 +95,7 @@ def stop_videos():
 
 
 def screen_off():
+    requests.get("http://4e5dcd37.ap.ngrok.io/nothing")
     routes.off()
     msg = "OK. The information screen turn off"
     return msg

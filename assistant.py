@@ -20,6 +20,7 @@ from __future__ import print_function
 import json
 import os.path
 import os
+
 import pathlib2 as pathlib
 import datetime
 
@@ -32,7 +33,7 @@ from google.assistant.library.device_helpers import register_device
 
 import argparse
 import subprocess
-import application
+from controllers import application
 import routes
 
 
@@ -162,7 +163,7 @@ def custom_command(event, assistant):
     return 0
 
 
-def process_event(event, assistant, app, ambient):
+def process_event(event, assistant):
     """Pretty prints events.
 
     Prints all events that occur with two spaces between each new
@@ -246,8 +247,6 @@ def main():
     device_model_id = args.device_model_id or device_model_id
 
     with Assistant(credentials, device_model_id) as assistant:
-        app = application.ApplicationStatus()
-        ambient = application.Ambient()
         events = assistant.start()
 
         device_id = assistant.device_id
@@ -270,7 +269,7 @@ def main():
                 print(WARNING_NOT_REGISTERED)
 
         for event in events:
-            process_event(event, assistant, app, ambient)
+            process_event(event, assistant)
 
 
 if __name__ == '__main__':

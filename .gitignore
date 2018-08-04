@@ -4,8 +4,12 @@ utils/*.json
 # Ignore key file
 static/keys.py
 
+ngrok-app/
+
 # Ignore pycache directory
 __pycache__/
 
 # Ignore PyCharm directory
 .idea
+
+*.mp3
