@@ -62,7 +62,7 @@ def get_weather(city_name):
         weather = "Clear"
     elif weather_id == 800:
         weather = "Clouds"
-    elif 802 <= weather_id <= 804:
+    elif 801 <= weather_id <= 804:
         weather = "Few_clouds"
     else:
         weather = "Unknown"
@@ -71,16 +71,8 @@ def get_weather(city_name):
 
 
 def actions_help():
-    msg = "Here are some things you can ask. For example, \n" \
-          "Play developer video \n" \
-          "  " \
-          "Stop movie \n" \
-          "  " \
-          "Turn on screen \n" \
-          "  " \
-          "Turn off screen \n" \
-          "  " \
-          "And Google assistant built-in commands. \n"
+    msg = "Here are some things you can ask. For example, \"Play developer video\", \"Stop movie\"," \
+          " \"Turn on screen\", And Google assistant built-in commands.\n"
     return msg
 
 

@@ -2,8 +2,11 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 import argparse
+import sys
+sys.path.append("../")
+from static import keys
 
-DEVELOPER_KEY = ""
+DEVELOPER_KEY = keys.DEVELOPER_KEY
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 

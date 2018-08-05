@@ -86,7 +86,6 @@ def custom_command(event, assistant):
         print()
         print("You sed: {}".format(cmd))
         print()
-        assistant.stop_conversation()
         if ('echo' in cmd or 'Echo' in cmd) and ('message' in cmd):
             if 'echo' in cmd:
                 synthesize_text(application.print_command(cmd, "echo message"), assistant)
@@ -141,7 +140,7 @@ def custom_command(event, assistant):
             assistant.stop_conversation()
             cmd = ""
             return 1
-        elif ('actions' in cmd or 'Actions' in cmd or 'action' in cmd or 'Action' in cmd) and 'help' in cmd:
+        elif ('actions' in cmd or 'Actions' in cmd or 'action' in cmd or 'Action' in cmd or 'options' in cmd) and 'help' in cmd:
             synthesize_text(application.actions_help(), assistant)
             assistant.stop_conversation()
             cmd = ""

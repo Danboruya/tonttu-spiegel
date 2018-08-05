@@ -3,11 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/application.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script language="JavaScript">
+    <!--
+    var reloadTime = 1000 * 60 * 10;
+
+    //タイマーをセット
+    function tm(){
+      tm = setInterval("location.reload()",reloadTime);
+    }
+    //-->
+  </script>
 </head>
-<body>
-    <div>
-       {{day}} {{time}} {{weather}} <img src={{weather_icon}}>
-        <br />{{temp}} {{city}}
-    </div>
+<body onLoad="tm()">
+  <div class = "box1">
+    <span id="view_clock"></span>
+
+    <script type="text/javascript">
+    timerID = setInterval('clock()',500); //0.5秒毎にclock()を実行
+
+    function clock() {
+    	document.getElementById("view_clock").innerHTML = getNow();
+    }
+
+    function getNow() {
+    	var now = new Date();
+    	var hour = now.getHours();
+    	var min = now.getMinutes();
+      var isAP = 0;
+      var hourStr = "";
+      var minStr = "";
+
+      if(hour >= 12){
+        hour = hour % 12;
+        isAP = 1;
+        if(hour < 10){
+          hourStr = "0";
+        }
+      }
+      if(min < 10){
+        minStr = "0";
+      }
+
+    	//出力用
+      //AM、PMの選択肢
+      var meridian = new Array("AM","PM");
+
+
+    	//出力用
+      var s = hourStr + hour + ":" + minStr + min +" "+ meridian[isAP]
+
+    	return s;
+    }
+    </script>
+  </div>
+  <div class="box2">
+    <img src="/static/images/{{container.icon[0]}}.png" width="65" height="65">
+  </div>
+  <div class ="box3">
+    <span id="view_day"></span>
+
+    <script type="text/javascript">
+      timerID2 = setInterval('clock2()',500); //0.5秒毎にclock()を実行
+
+      function clock2() {
+      	document.getElementById("view_day").innerHTML = getNow2();
+      }
+
+
+      function getNow2() {
+      	var now = new Date();
+      	var mon = now.getMonth();
+        var day = now.getDate();
+        var you = now.getDay();
+
+      	//出力用
+        //曜日の選択肢
+      	var youbi = new Array("Sun","Mon","Tue","Wed","Thur","Fri","Sat");
+      	//月名の選択肢
+      	var month = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+
+
+      	//出力
+      	return youbi[you] +" "+month[mon] + " " + day;
+      }
+    </script>
+      <div id="box4">
+      	    {{temp}} {{city}}
+      </div>
+  </div>
+  <script language="JavaScript">
+  function autoLink() {
+    var org = {{page_info|tojson}};
+    var url = org.path[0];
+    var state = org.status[0];
+    if (state == 1){
+      location.href="http://localhost:8080"+url;
+    }
+  }
+  setInterval("autoLink()",1000);
+  </script>
 </body>
 </html>

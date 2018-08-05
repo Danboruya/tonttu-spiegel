@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <link rel="stylesheet" href="/static/application.css" type="text/css">
   <body>
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
     <div id="player"></div>
@@ -10,20 +11,20 @@
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      
+
 　　　//pyプログラムから動画ID取得
       var org = {{caught_url|tojson}};
       var video_id = org.value[0];
-      
+
       var player;
-      
+
       function onYouTubeIframeAPIReady() {
 　　　　//adjust height and width paramerer for rasberry
         player = new YT.Player(
           'player',
         {
-          height: '270',
-          width: '480',
+          height: '261',
+          width: '464',
           videoId: video_id,// YouTubeのID
           playerVars: {
             autoplay: 1,//自動再生
@@ -40,7 +41,7 @@
               }
             }
           }
-         } 
+         }
         );
       }
     </script>
